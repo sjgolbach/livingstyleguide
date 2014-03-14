@@ -25,12 +25,12 @@ module ::Tilt
         options[:load_paths] = options[:load_paths] | Rails.application.config.assets.paths
       end
       options[:template_location].each do |path, short|
-        options[:load_paths] << ::LivingStyleGuide::Importer.new(path)
+        options[:load_paths] << ::LivingStyleGuide::Importer.new(@scope, path)
       end
       options[:filename]  = eval_file
       options[:line]      = line
       options[:syntax]    = @options[:syntax]
-      options[:importer]  = LivingStyleGuide::Importer.new('.')
+      options[:importer]  = LivingStyleGuide::Importer.new(@scope, '.')
       options[:sprockets] = { context: @scope }
       options[:custom]    = { sprockets_context: @scope }
       options
@@ -64,7 +64,7 @@ module ::Tilt
       return unless @scope.respond_to?(:depend_on)
       test = /^#{root}/
       @engine.files.uniq.each do |file|
-        if file =~ test
+        if file =~ test and File.exists?(file)
           @scope.depend_on file
         end
       end

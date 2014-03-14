@@ -66,7 +66,7 @@ module LivingStyleGuide
       test = /^#{File.dirname(@options[:filename])}/
       @options[:living_style_guide].files.each do |file|
         if file =~ test
-          sass = File.read(file)
+          sass = File.read(file) rescue ''
           variables << sass.scan(%r(\$([a-z\-_]+)\s*:))
         end
       end
